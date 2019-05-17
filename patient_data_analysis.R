@@ -17,6 +17,7 @@ TCGA_data$sig7_high_low = c("low","high")[as.numeric(TCGA_data$sig7 > median(TCG
 library(GGally)
 library(survival)
 library(ggplot2)
+library(ggpubr)
 common = intersect(clinical$X1, TCGA_data$X1)
 survdat = data.frame(time = clinical_TCGA[common,5],                                          
                      status = clinical_TCGA[common,6],
