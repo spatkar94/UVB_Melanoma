@@ -1,6 +1,6 @@
 #Read in data
-TCGA_data <- read_csv("~/Yardena/TCGA_data.csv")
-clinical_TCGA <- read_csv("~/Yardena/clinical_TCGA.csv")
+TCGA_data <- read_csv("./TCGA_data.csv")
+clinical_TCGA <- read_csv("./clinical_TCGA.csv")
 TCGA_data = as.data.frame(TCGA_data)
 rownames(TCGA_data) = TCGA_data$X1
 clinical_TCGA = as.data.frame(clinical_TCGA)
