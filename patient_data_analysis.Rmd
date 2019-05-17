@@ -1,18 +1,7 @@
----
-title: "UVB_melanoma_analysis"
-author: "Sushant Patkar"
-date: "5/16/2019"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r}
-TCGA_data <- read_csv("~/Yardena/TCGA_data.csv")
-clinical_TCGA <- read_csv("~/Yardena/clinical_TCGA.csv")
-SKCM_RNAseq <- read_delim("~/Yardena/SKCM.rnaseqv2__illuminahiseq_rnaseqv2__unc_edu__Level_3__RSEM_genes_normalized__data.data.txt",
+#Read in the data
+TCGA_data <- read_csv("./TCGA_data.csv")
+clinical_TCGA <- read_csv("./clinical_TCGA.csv")
+SKCM_RNAseq <- read_delim("./SKCM.rnaseqv2__illuminahiseq_rnaseqv2__unc_edu__Level_3__RSEM_genes_normalized__data.data.txt",
 "\t", escape_double = FALSE, trim_ws = TRUE)
 SKCM_RNAseq = as.data.frame(SKCM_RNAseq)
 SKCM_RNAseq$`Hybridization REF` = sapply(SKCM_RNAseq$`Hybridization REF`, function(x) strsplit(x,split = "\\|")[[1]][1])
@@ -35,10 +24,11 @@ TCGA_data$diversity_high_low = c("low","high")[as.numeric(TCGA_data$diversity > 
 TCGA_data$sig7_high_low = c("low","high")[as.numeric(TCGA_data$sig7 > median(TCGA_data$sig7,na.rm = T))+1]
 
 
-#TCGA survival analysis Figure 6
+#TCGA survival analysis
 
 library(GGally)
 library(survival)
+library(ggplot2)
 common = intersect(clinical$X1, TCGA_data$X1)
 survdat = data.frame(time = clinical_TCGA[common,5],                                          
                   status = clinical_TCGA[common,6],
@@ -109,7 +99,7 @@ print(ggplot(data = survdat[!is.na(survdat$clones),], aes(x = clones, y = CYT, f
         theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20)) + scale_fill_manual(name = "ITH", values = cols[order(as.numeric(vals))], labels = vals[order(as.numeric(vals))]) + xlab("# clones") + ylab("CYT") + stat_compare_means(label.y = 10))
 
 
-#UV exposure analysis, Figure 7
+#UV exposure analysis
 
 surv = survfit(Surv(time,status) ~ ITH, data = survdat[survdat$SIG7 == "high",])
 diff = survdiff(Surv(time,status) ~ ITH, data = survdat[survdat$SIG7 == "high",])
@@ -153,9 +143,5 @@ diff = survdiff(Surv(time,status)~ITHvsDivergence,data = survdat[survdat$SIG7 ==
 p4_2 = ggsurv(surv) + labs(subtitle = paste("Sig7 low Log rank test p-value: ",format(1 - pchisq(diff$chisq,length(diff$n) - 1),digits = 3),sep = "")) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20)) + guides(linetype = F) + scale_color_manual( name = "ITH, diversity", values = c("#00BFC4","#7CAE00","#F8766D", "#C77CFF"), labels = c("#00BFC4" = "high, low", "#F8766D" = "low, high", "#7CAE00" = "low, low", "#C77CFF" = "high, high")) +  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +  scale_x_continuous(limits = c(0,10000)) + xlab("Time (Days)") + ylab("Survival(%)")
 print(p4_2)
 
-```
 
-```{r}
-
-```
 
