@@ -6,7 +6,7 @@ Little is known regarding the relationship between intratumor heterogeneity (ITH
 
 A) Kaplan-Meier survival curves (time is measured in days on the X axis) of patients with high vs. low mutational load. Log rank statistic:1.96, p=0.16. B) Kaplan-Meier survival curves of patients with high vs. low CNV load Log rank statistic:0.31, p=577. C) Kaplan-Meier survival curves of patients with high vs. low ITH. Log rank statistic:3.97, p=0.046 D) Kaplan-Meier survival curve for patients segregated by number of clones. E) Kaplan-Meier survival curves of patients segregated based on the combination of mutational load and ITH. Log rank statistic:9.20, p=0.0267. F) Kaplan-Meier survival curves of patients segregated based on the combination of CNV load and ITH. Log rank statistic:4.57, p=0.206. G) CYT score of patients with high vs. low ITH. p-value = 7.6e-05, Wilcox’s rank sum test. H) CYT score of patients segregated by number of clones.
 
-# Overall survival of number of clones and clonal diveristy in TCGA-SKCM patients with high and low UV exposure 
+# Overall survival as a function of number of clones and clonal diveristy in TCGA-SKCM patients with high and low UV exposure 
 ![Survival rates of patients vary between high and low ITH/diversity groups ](Figure7_updated.png)
 
 # Publication
