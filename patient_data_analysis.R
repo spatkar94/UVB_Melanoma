@@ -20,7 +20,7 @@ library(GGally)
 library(survival)
 library(ggplot2)
 library(ggpubr)
-common = intersect(clinical$X1, TCGA_data$X1)
+common = intersect(clinical_TCGA$X1, TCGA_data$X1)
 
 #CYT score transformed to log-scale for visualization
 survdat = data.frame(time = clinical_TCGA[common,5],                                          
