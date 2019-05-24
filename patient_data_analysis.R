@@ -5,6 +5,8 @@ TCGA_data = as.data.frame(TCGA_data)
 rownames(TCGA_data) = TCGA_data$X1
 clinical_TCGA = as.data.frame(clinical_TCGA)
 rownames(clinical_TCGA) = clinical_TCGA$X1
+
+#divide into low and high groups
 TCGA_data$ITH_high_low = c("low","high")[as.numeric(TCGA_data$ITH > median(TCGA_data$ITH,na.rm = T))+1]
 TCGA_data$ML_high_low = c("low","high")[as.numeric(TCGA_data$mutation_load > median(TCGA_data$mutation_load,na.rm = T))+1]
 TCGA_data$CNV_high_low = c("low","high")[as.numeric(TCGA_data$cnv_load > median(TCGA_data$cnv_load,na.rm = T))+1]
