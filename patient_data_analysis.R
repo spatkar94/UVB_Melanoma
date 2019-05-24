@@ -19,6 +19,8 @@ library(survival)
 library(ggplot2)
 library(ggpubr)
 common = intersect(clinical$X1, TCGA_data$X1)
+
+#CYT score transformed to log-scale for visualization
 survdat = data.frame(time = clinical_TCGA[common,5],                                          
                      status = clinical_TCGA[common,6],
                      age = clinical_TCGA[common,2],
@@ -87,47 +89,3 @@ print(ggplot(data = survdat[!is.na(survdat$ITH),], aes(x = ITH, y = CYT, fill = 
 print(ggplot(data = survdat[!is.na(survdat$clones),], aes(x = clones, y = CYT, fill = clones)) + geom_dotplot(binaxis='y', stackdir='center',dotsize = 0.7) + 
         theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20)) + scale_fill_manual(name = "ITH", values = cols[order(as.numeric(vals))], labels = vals[order(as.numeric(vals))]) + xlab("# clones") + ylab("CYT") + stat_compare_means(label.y = 10))
 
-
-#UV exposure analysis
-
-surv = survfit(Surv(time,status) ~ ITH, data = survdat[survdat$SIG7 == "high",])
-diff = survdiff(Surv(time,status) ~ ITH, data = survdat[survdat$SIG7 == "high",])
-
-p1_1 = ggsurv(surv) + labs(subtitle = paste("Sig7 high Log rank test p-value: ",format(1 - pchisq(diff$chisq,length(diff$n) - 1),digits = 2),sep = "")) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20)) + guides(linetype = F) + scale_color_manual(name = "ITH", values = c("blue", "red"), labels = c("blue" = "low","red" = "high")) + scale_y_continuous(labels = scales::percent, limits = c(0,1)) +  scale_x_continuous(limits = c(0,10000)) + xlab("Time (Days)") + ylab("Survival(%)")
-print(p1_1)
-
-surv = survfit(Surv(time,status) ~ ITH, data = survdat[survdat$SIG7 == "low",])
-diff = survdiff(Surv(time,status) ~ ITH, data = survdat[survdat$SIG7 == "low",])
-
-p1_2 = ggsurv(surv) + labs(subtitle = paste("Sig7 low. Log rank test p-value: ",format(1 - pchisq(diff$chisq,length(diff$n) - 1),digits = 2),sep = "")) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20))+ guides(linetype = F) + scale_color_manual(name = "ITH", values = c("red", "blue"), labels = c("red" = "high","blue" = "low")) + scale_y_continuous(labels = scales::percent, limits = c(0,1)) +  scale_x_continuous(limits = c(0,10000)) + xlab("Time (Days)") + ylab("Survival(%)")
-print(p1_2)
-
-
-surv = survfit(Surv(time,status)~diversity,data = survdat[survdat$SIG7 == "high",])
-diff = survdiff(Surv(time,status)~diversity,data = survdat[survdat$SIG7 == "high",])
-
-
-p3_1 = ggsurv(surv) + labs(subtitle = paste("Sig7 high Log rank test p-value: ",format(1 - pchisq(diff$chisq,length(diff$n) - 1),digits = 2),sep = "")) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20)) + guides(linetype = F) + scale_color_manual(name = "Diversity", values = c("red", "blue"), labels = c("red" = "high", "blue" = "low")) + scale_y_continuous(labels = scales::percent, limits = c(0,1)) +  scale_x_continuous(limits = c(0,10000)) + xlab("Time (Days)") + ylab("Survival(%)")
-print(p3_1)
-
-surv = survfit(Surv(time,status)~diversity,data = survdat[survdat$SIG7 == "low",])
-diff = survdiff(Surv(time,status)~diversity,data = survdat[survdat$SIG7 == "low",])
-
-
-p3_2 = ggsurv(surv) + labs(subtitle = paste("Sig7 low Log rank test p-value: ",format(1 - pchisq(diff$chisq,length(diff$n) - 1),digits = 2),sep = "")) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20)) + guides(linetype = F) + scale_color_manual(name = "Diversity", values = c("red", "blue"), labels = c("red" = "high", "blue" = "low")) +  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +  scale_x_continuous(limits = c(0,10000)) + xlab("Time (Days)") + ylab("Survival(%)")
-print(p3_2)
-
-survdat$ITHvsDivergence = strata(survdat$ITH,survdat$diversity)
-surv = survfit(Surv(time,status)~ITHvsDivergence,data = survdat[survdat$SIG7 == "high",])
-diff = survdiff(Surv(time,status)~ITHvsDivergence,data = survdat[survdat$SIG7 == "high",])
-
-
-p4_1 = ggsurv(surv) + labs(subtitle = paste("Sig7 high Log rank test p-value: ",format(1 - pchisq(diff$chisq,length(diff$n) - 1),digits = 3),sep = "")) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20)) + guides(linetype = F) + scale_color_discrete( name = "ITH, diversity") +  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +  scale_x_continuous(limits = c(0,10000)) + xlab("Time (Days)") + ylab("Survival(%)")
-print(p4_1)
-
-surv = survfit(Surv(time,status)~ITHvsDivergence,data = survdat[survdat$SIG7 == "low",])
-diff = survdiff(Surv(time,status)~ITHvsDivergence,data = survdat[survdat$SIG7 == "low",])
-
-
-p4_2 = ggsurv(surv) + labs(subtitle = paste("Sig7 low Log rank test p-value: ",format(1 - pchisq(diff$chisq,length(diff$n) - 1),digits = 3),sep = "")) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_blank(), axis.line = element_line(colour = "black"), text = element_text(size = 20)) + guides(linetype = F) + scale_color_manual( name = "ITH, diversity", values = c("#00BFC4","#7CAE00","#F8766D", "#C77CFF"), labels = c("#00BFC4" = "high, low", "#F8766D" = "low, high", "#7CAE00" = "low, low", "#C77CFF" = "high, high")) +  scale_y_continuous(labels = scales::percent, limits = c(0,1)) +  scale_x_continuous(limits = c(0,10000)) + xlab("Time (Days)") + ylab("Survival(%)")
-print(p4_2)
