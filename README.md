@@ -4,7 +4,7 @@ Little is known regarding the relationship between intratumor heterogeneity (ITH
 
 
 # Publication
-accepted to Cell. 
+in preparation 
 
 
 
